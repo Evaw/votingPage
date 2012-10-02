@@ -1,0 +1,31 @@
+<link rel="shortcut icon" href="/favicon.ico?v=2" />
+<body>
+    <h1>Voting Page</h1>
+    <form enctype="multipart/form-data" method="post">
+        <label>
+            <div>Title</div> <input type="text" name="title" value="{{title}}">
+        </label>
+        <label>
+        	<div>Picture</div>
+        	<input type="file" name ="pic">
+        </label>
+        <div class="error">{{error}}</div>
+        <input type="submit">
+    </form>
+    <hr>
+    {% for art in arts %}
+    <div class="art">
+        <div class="art-title">{{art.title}}</div>
+        <div><span>Votes</span><span>{{art.votes}}</span></div>
+        {% if art.pic %}
+        <img src="/getImg?img_id={{art.key()}}">
+        {% endif %}
+        {% if canVote %}
+        <form method="post" action="vote">
+        	<input type="hidden" name="vote" value="{{art.key()}}"> 
+        	<input type="submit" value="vote">
+        </form>
+        {% endif %}
+    </div>
+    {% endfor %}
+</body>
