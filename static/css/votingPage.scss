@@ -1,0 +1,105 @@
+$dark: #333;
+$orange: #FFA500;
+$green: #008000;
+$background: $dark;
+
+.button  {
+	background: transparent;
+	border: 1px whiteSmoke;
+	border-radius: 3px;
+	display: inline-block;
+	box-shadow: inset whiteSmoke 0px 0px 5px 0px, 0px 0px 5px 0px;
+	color: whiteSmoke;
+	padding: 5px;
+	cursor: pointer;
+}
+.file-upload-container{
+
+}
+.file-upload{
+	/*
+	opacity: 0;
+	Filter: alpha(opacity = 50);
+	*/
+}
+.submit-art{
+	@extend .button;
+}
+.voting-button{
+	@extend .button;
+
+}
+
+input[name="title"]{
+	background: $green;
+} 
+
+input[name="pic"]{
+
+}
+
+
+
+body{
+	background: $background;
+	color: $orange;
+}
+
+.art{
+	display: block;
+	margin: auto;
+	width: 50%;
+	border: 5px solid;
+	padding: 10px;
+	border-top: 0px;
+	margin-top: 30px;
+	border-radius: 10px;
+	margin-bottom: 30px;
+	background-image: linear-gradient(top, rgb(51,51,51) 33%, rgb(35,36,36) 67%);
+	background-image: -o-linear-gradient(top, rgb(51,51,51) 33%, rgb(35,36,36) 67%);
+	background-image: -moz-linear-gradient(top, rgb(51,51,51) 33%, rgb(35,36,36) 67%);
+	background-image: -webkit-linear-gradient(top, rgb(51,51,51) 33%, rgb(35,36,36) 67%);
+	background-image: -ms-linear-gradient(top, rgb(51,51,51) 33%, rgb(35,36,36) 67%);
+
+}
+.vote-form {
+	margin: 10px 0 0 0;
+}
+.vote-form .voting-button{
+	background: transparent;
+	background: rgba(30,30,30,0.9);
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.art img{
+	width: 100%;
+}
+.art img.before {
+	box-shadow: red 0px 0px 3px 3px;
+	border: red solid 10px;
+}
+.heading{
+	
+}
+
+.picture-submission{
+
+}
+
+.art-showcase{
+
+}
+
+.art-title{
+
+}
+
+.votes{
+
+}
+
+.art-image{
+
+}
+
+

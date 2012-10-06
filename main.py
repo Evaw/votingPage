@@ -22,8 +22,12 @@ MEMCACHE_ART_PREFIX = "Art_"
 MEMCACHE_TOP_ART_KEY = "top"
 VOTING_EVENT = "1"
 VOTES_ACTIVE = True
+MAX_POSTS = 20
+PAGE_HEADING = "Voting Page- currently max "+str(MAX_POSTS) + "posts"
+def getMemcacheIDfromKey(key):
+    return MEMCACHE_ART_PREFIX + str(key)
 def getMemcacheArtID(art):
-    return MEMCACHE_ART_PREFIX + str(art.key())
+    return getMemcacheIDfromKey(str(art.key()))
 
 def getArtByID(art_id):
     keyStr = str(art_id)
@@ -87,13 +91,33 @@ def safeMemcacheUpdate(key, val):
         i+=1
     return False
         
-def updateTopMemcacheKeys(keys):
-    return safeMemcacheUpdate(MEMCACHE_TOP_ART_KEY, keys)
-    
-        
+
 def updateArtMemcache(art):
-    artID = getMemcacheArtID(art)
-    return safeMemcacheUpdate(artID, art)
+    memcacheArtID = getMemcacheArtID(art)
+    safeMemcacheUpdate(memcacheArtID, art)
+    #updateTopMemcacheKeys(memcacheArtID, art)
+    topArts(True)
+def removeFromMemcache(key):
+    memcacheArtID = getMemcacheIDfromKey(key)
+    memcache.delete(memcacheArtID)
+    tops = memcache.get(MEMCACHE_TOP_ART_KEY)
+    topsStr = [str(a) for a in tops]
+    try:
+        idx = topsStr.index(key) 
+        tops.remove(tops[idx])
+    except ValueError:
+        pass
+    else:
+        memcache.set(MEMCACHE_TOP_ART_KEY, tops)
+
+def deleteDBArtEntry(key):
+    logging.info('DB transaction delete')
+    db.delete(key)
+    #art.delete()
+    
+def deleteArt(key):
+    db.run_in_transaction(deleteDBArtEntry,key)
+    removeFromMemcache(key)
     
 def incrementDBvote(key, amount):
     art = db.get(key)
@@ -104,11 +128,10 @@ def incrementVote(key, amount):
     db.run_in_transaction(incrementDBvote, key, amount)
     art = db.get(key)
     updateArtMemcache(art)
-    topArts(True)
+    #topArts(True)
     
 def topArts(update=False):
-    key = "top"
-    keys = memcache.get(key)
+    keys = memcache.get(MEMCACHE_TOP_ART_KEY)
     if keys is None or update:
         logging.info('DB Query')
         arts = db.GqlQuery("select * FROM Art ORDER BY created") #DESC LIMIT 10")
@@ -132,7 +155,7 @@ class GetImage(Handler):
             self.response.out.write('No image')
             
 class MainPage(Handler):
-    def render_front(self, error="", canVote = False):
+    def render_front(self, title="", pageHeading = PAGE_HEADING, error="", canVote = False):
         keys = topArts()#db.GqlQuery("SELECT * FROM Art ORDER BY created DESC LIMIT 10")
         #arts = list(arts)
         logging.info('see value in main ' + str(len(keys)))
@@ -142,7 +165,7 @@ class MainPage(Handler):
             a = getArtByID(k)
             arts.append(a)
         canVote = canVote and VOTES_ACTIVE
-        self.render("front.html", error = error, arts = arts, canVote = canVote)
+        self.render("front.html", title=title,pageHeading = pageHeading,error = error, arts = arts, canVote = canVote)
     
     def get(self):
         visits = 1;
@@ -158,25 +181,42 @@ class MainPage(Handler):
         self.response.headers.add_header("Set-Cookie", "visits=%s" % new_cookie_val)
         self.render_front(canVote = canVote)
     def post(self):
-        title = self.request.get("title")
-        art = self.request.get("art")
-        pic = self.request.get("pic")
+        keys = memcache.get(MEMCACHE_TOP_ART_KEY)
+        if keys and len(keys) >= MAX_POSTS:
+            self.redirect('/')#only allow MAX_POSTS posts, this is going on appengine
+            return
         
+        title = self.request.get("title")
+        pic = self.request.get("pic")
+        canVote = not check_secure_val(self.request.cookies.get('voted%s' % VOTING_EVENT))
+        error =""
         if len(title) > 500:
             error = "title should be less than 500 characters"
             self.render(title,error)
         elif title and pic:
-            resizedPic = images.resize(pic, 500, 300)
-            picBlob = db.Blob(resizedPic)
-            a = Art(title = title, pic=picBlob)
-            a.put()
-            topArts(True)
-            self.redirect("/")
-        else:
-            error = "we need both a title and some artwork!"
-            self.render_front(title,error)
+            try:
+                resizedPic = images.resize(pic, 500, 300)
+                picBlob = db.Blob(resizedPic)
+                a = Art(title = title, pic=picBlob)
+                a.put()
+                topArts(True)
+            except images.BadImageError:
+                error = "Bad Image file"
+            except images.NOT_IMAGE:
+                error = "no image file"
+            except images.IMAGE_TOO_LARGE:
+                error = "image too large, please keep it under 4MB"
+            except images.Error:
+                error = "Sorry, the image you tried to upload could not be processed"
+            finally:
+                self.render_front(title=title,error = error, canVote=canVote)
 
-
+class Remove(Handler):
+    def post(self):
+        artID=self.request.get('remove')
+        deleteArt(artID)
+        self.redirect('/')
+        
 class Vote(Handler):
     def setVotedCookies(self):
         new_cookie_val = make_secure_val(str(random.randint(0,2000000000000)))
@@ -213,6 +253,7 @@ class Vote(Handler):
 logging.info('before starting app')
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/getImg',GetImage),
-                               ('/vote', Vote)
+                               ('/vote', Vote),
+                               ('/remove', Remove),
                                ], debug=True)
 logging.info('app started')

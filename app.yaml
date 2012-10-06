@@ -1,4 +1,4 @@
-application: green-emerald
+application: purple-plum
 version: 1
 runtime: python27
 api_version: 1
@@ -9,8 +9,8 @@ handlers:
   static_files: favicon.ico
   upload: favicon\.ico
 
-- url: /imageFunJS
-  static_dir: imageFunJS
+- url: /static
+  static_dir: static
 
 - url: .*
   script: main.app

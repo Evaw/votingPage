@@ -1,0 +1,54 @@
+.button, .submit-art, .voting-button {
+  background: transparent;
+  border: 1px whiteSmoke;
+  border-radius: 3px;
+  display: inline-block;
+  box-shadow: inset whiteSmoke 0px 0px 5px 0px, 0px 0px 5px 0px;
+  color: whiteSmoke;
+  padding: 5px;
+  cursor: pointer; }
+
+.file-upload {
+  /*
+  opacity: 0;
+  Filter: alpha(opacity = 50);
+  */ }
+
+input[name="title"] {
+  background: green; }
+
+body {
+  background: #333333;
+  color: orange; }
+
+.art {
+  display: block;
+  margin: auto;
+  width: 50%;
+  border: 5px solid;
+  padding: 10px;
+  border-top: 0px;
+  margin-top: 30px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  background-image: linear-gradient(top, #333333 33%, #232424 67%);
+  background-image: -o-linear-gradient(top, #333333 33%, #232424 67%);
+  background-image: -moz-linear-gradient(top, #333333 33%, #232424 67%);
+  background-image: -webkit-linear-gradient(top, #333333 33%, #232424 67%);
+  background-image: -ms-linear-gradient(top, #333333 33%, #232424 67%); }
+
+.vote-form {
+  margin: 10px 0 0 0; }
+
+.vote-form .voting-button {
+  background: transparent;
+  background: rgba(30, 30, 30, 0.9);
+  padding-left: 10px;
+  padding-right: 10px; }
+
+.art img {
+  width: 100%; }
+
+.art img.before {
+  box-shadow: red 0px 0px 3px 3px;
+  border: red solid 10px; }
