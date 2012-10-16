@@ -5,9 +5,12 @@
 	</head>
 	<body>
 		<h1 class="heading">{{pageHeading}}</h1>
+		
 		<section class="picture-submission">
-			<form enctype="multipart/form-data" method="post">
-				<div>
+			{% if userManagement.user %}
+			<a href="{{userManagement.logoutURL}}">logout {{userManagement.nickname}}</a>
+			<form class="submit-art-form"  enctype="multipart/form-data" method="post">
+				<div >
 					<label for="title"> Title </label>
 					<div>
 						<input type="text" name="title" value="{{title}}"> 
@@ -22,11 +25,17 @@
 					
 				</div>
 				
+				
+				<div class="submit-art-container">
+					<input class="submit-art" type="submit">
+				</div>
 				<div class="error">{{error}}</div>
-				<input class="submit-art" type="submit">
 			</form>
+			{% else %}
+			<a href="{{userManagement.loginURL}}">login</a>
+			{% endif %}
 		</section>
-		
+
 		<hr>
 		<section class="art-showcase">
 			{% for art in arts %}
@@ -42,22 +51,28 @@
 						<img src="/getImg?img_id={{art.key()}}"> 		
 					</div>
 		
+					<div class="action-buttons-container">
+						{% if canVote %}
+						<form class="vote-form" method="post" action="vote">
+							<input type="hidden" name="vote" value="{{art.key()}}"> 
+							<input class="voting-button" type="submit" value="vote">
+						</form>
+						
+						{% endif %}
+						{% if userManagement['isAdmin'] or art.artist == userManagement['userKey']%}
+						<form class="remove-form" method="post" action="remove">
+							<input type="hidden" name="remove" value="{{art.key()}}">
+							<input class="remove-button button" type="submit" value="remove">
+						</form>
+						{% endif %}
+					</div>
 					
-					{% if canVote %}
-					<form class="vote-form" method="post" action="vote">
-						<input type="hidden" name="vote" value="{{art.key()}}"> 
-						<input class="voting-button" type="submit" value="vote">
-					</form>
-					
-					{% endif %}
-					<form class="remove-form" method="post" action="remove">
-						<input type="hidden" name="remove" value="{{art.key()}}">
-						<input class="remove-button" type="submit" value="remove">
-					</form>
 					{% endif %} 
 				</div>
 			</div>
 			{% endfor %}
 		</section>
+		<footer class="footer">
+		</footer>
 	</body>
 </html>

@@ -24,7 +24,7 @@ body {
 .art {
   display: block;
   margin: auto;
-  width: 50%;
+  width: 90%;
   border: 5px solid;
   padding: 10px;
   border-top: 0px;
@@ -37,8 +37,13 @@ body {
   background-image: -webkit-linear-gradient(top, #333333 33%, #232424 67%);
   background-image: -ms-linear-gradient(top, #333333 33%, #232424 67%); }
 
-.vote-form {
-  margin: 10px 0 0 0; }
+@media handheld and (min-width: 500px), screen and (min-width: 500px) {
+  .art {
+    width: 50%; } }
+.vote-form,
+.remove-form {
+  margin: 10px 0 0 0;
+  display: inline-block; }
 
 .vote-form .voting-button {
   background: transparent;
@@ -52,3 +57,22 @@ body {
 .art img.before {
   box-shadow: red 0px 0px 3px 3px;
   border: red solid 10px; }
+
+.footer {
+  display: block;
+  height: 10em; }
+
+.error {
+  color: red; }
+
+.submit-art-form > * {
+  float: left; }
+
+.picture-submission {
+  display: inline-block;
+  background: #D1D1D1;
+  border: solid 3px;
+  border-radius: 3px;
+  color: black;
+  bottom: 0px;
+  padding: 0 15px 15px 15px; }

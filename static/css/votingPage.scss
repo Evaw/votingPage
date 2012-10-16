@@ -48,7 +48,7 @@ body{
 .art{
 	display: block;
 	margin: auto;
-	width: 50%;
+	width: 90%;
 	border: 5px solid;
 	padding: 10px;
 	border-top: 0px;
@@ -62,8 +62,17 @@ body{
 	background-image: -ms-linear-gradient(top, rgb(51,51,51) 33%, rgb(35,36,36) 67%);
 
 }
-.vote-form {
+@media handheld and (min-width: 500px), 
+screen and (min-width: 500px){
+	.art{
+		width: 50%;
+	}
+}
+
+.vote-form,
+.remove-form {
 	margin: 10px 0 0 0;
+	display: inline-block;
 }
 .vote-form .voting-button{
 	background: transparent;
@@ -81,9 +90,26 @@ body{
 .heading{
 	
 }
-
+.footer{
+	display: block;
+	height: 10em;
+}
+.error{
+	color: red;
+}
 .picture-submission{
-
+}
+.submit-art-form > *{
+	float: left;
+}
+.picture-submission{
+	display: inline-block;
+	background: #D1D1D1;
+	border: solid 3px;
+	border-radius: 3px;
+	color: black;
+	bottom: 0px;
+	padding: 0 15px 15px 15px;
 }
 
 .art-showcase{
