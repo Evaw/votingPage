@@ -1,3 +1,15 @@
+::-webkit-selection,
+::selection {
+  color: black;
+  background: red; }
+
+body {
+  margin: 0;
+  padding: 0; }
+
+.main-body {
+  margin: 8px; }
+
 .button, .submit-art, .voting-button {
   background: transparent;
   border: 1px whiteSmoke;
@@ -9,13 +21,28 @@
   cursor: pointer; }
 
 .file-upload {
+  border: 0px;
   /*
   opacity: 0;
   Filter: alpha(opacity = 50);
   */ }
 
+.submit-art {
+  clear: left;
+  display: block;
+  height: 3em;
+  display: inline-block;
+  font-weight: bold;
+  color: black;
+  box-shadow: #222 0px 0px 3px 1px, inset #333 0px 0px 3px 0px; }
+
 input[name="title"] {
-  background: green; }
+  background: #333;
+  border: black;
+  color: #D1D1D1;
+  font-weight: bold;
+  line-height: 1.4em;
+  border-radius: 3px; }
 
 body {
   background: #333333;
@@ -58,6 +85,16 @@ body {
   box-shadow: red 0px 0px 3px 3px;
   border: red solid 10px; }
 
+.heading {
+  display: inline-block;
+  height: 3em;
+  margin: 5px;
+  position: relative; }
+
+.picture-submission {
+  float: right;
+  display: inline-block; }
+
 .footer {
   display: block;
   height: 10em; }
@@ -65,14 +102,39 @@ body {
 .error {
   color: red; }
 
+.picture-submission {
+  /*position: fixed;
+  bottom: 0;*/ }
+
 .submit-art-form > * {
   float: left; }
 
 .picture-submission {
   display: inline-block;
-  background: #D1D1D1;
-  border: solid 3px;
+  background: #CE1B1B;
+  border: none;
   border-radius: 3px;
   color: black;
-  bottom: 0px;
-  padding: 0 15px 15px 15px; }
+  bottom: 0px; }
+
+.art-title {
+  font-weight: bolder;
+  font-size: 1.4em; }
+
+.picture-submission-container {
+  display: inline-block;
+  -webkit-transition: height 1s;
+  margin-top: 5px; }
+
+.no-height {
+  display: none;
+  height: 0; }
+
+.picture-submission > * {
+  padding: 5px; }
+
+.user-login-container {
+  border-bottom: 1px solid; }
+
+.submit-art-form > * {
+  margin-right: 3px; }

@@ -2,7 +2,19 @@ $dark: #333;
 $orange: #FFA500;
 $green: #008000;
 $background: $dark;
+::-webkit-selection,
+::selection {
+	color: black;
+	background: red;
+}
 
+body{
+	margin: 0;
+	padding: 0;
+}
+.main-body{
+	margin: 8px;
+}
 .button  {
 	background: transparent;
 	border: 1px whiteSmoke;
@@ -17,6 +29,7 @@ $background: $dark;
 
 }
 .file-upload{
+	border: 0px;
 	/*
 	opacity: 0;
 	Filter: alpha(opacity = 50);
@@ -24,6 +37,13 @@ $background: $dark;
 }
 .submit-art{
 	@extend .button;
+	clear: left;
+	display: block;
+	height: 3em;
+	display: inline-block;
+	font-weight: bold;
+	color: black;
+	box-shadow: #222 0px 0px 3px 1px, inset #333 0px 0px 3px 0px;
 }
 .voting-button{
 	@extend .button;
@@ -31,7 +51,12 @@ $background: $dark;
 }
 
 input[name="title"]{
-	background: $green;
+	background: #333;
+	border: black;
+	color: #D1D1D1;
+	font-weight: bold;
+	line-height: 1.4em;
+	border-radius: 3px;
 } 
 
 input[name="pic"]{
@@ -88,7 +113,14 @@ screen and (min-width: 500px){
 	border: red solid 10px;
 }
 .heading{
-	
+	display: inline-block;
+	height: 3em;
+	margin: 5px;
+	position: relative;
+}
+.picture-submission{
+	float: right;
+	display: inline-block;
 }
 .footer{
 	display: block;
@@ -98,18 +130,19 @@ screen and (min-width: 500px){
 	color: red;
 }
 .picture-submission{
+	/*position: fixed;
+	bottom: 0;*/
 }
 .submit-art-form > *{
 	float: left;
 }
 .picture-submission{
 	display: inline-block;
-	background: #D1D1D1;
-	border: solid 3px;
+	background: #CE1B1B;
+	border:none;
 	border-radius: 3px;
 	color: black;
 	bottom: 0px;
-	padding: 0 15px 15px 15px;
 }
 
 .art-showcase{
@@ -117,7 +150,8 @@ screen and (min-width: 500px){
 }
 
 .art-title{
-
+	font-weight: bolder;
+	font-size: 1.4em;
 }
 
 .votes{
@@ -129,3 +163,25 @@ screen and (min-width: 500px){
 }
 
 
+.picture-submission-container{
+	display: inline-block;
+	-webkit-transition: height 1s;
+	margin-top: 5px;
+}
+
+.no-height{
+	display: none;
+	height: 0;
+
+}
+
+.picture-submission  > *{
+	padding: 5px;
+}
+.user-login-container{
+	border-bottom: 1px solid;
+}
+
+.submit-art-form > *{
+	margin-right: 3px;
+}

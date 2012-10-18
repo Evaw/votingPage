@@ -1,8 +1,8 @@
-#TODO: resize images
 #TODO: test worthiness of submission with challenge problem (factoring?)
 #TODO: pagination 
 #TODO: make a way to activate/deactivate the voting without re-deploying app.
-#add user management, at least at the cookie level to allow them to take their stuff down if they want 
+#improve user management, use memcache
+# 
 #--address="1.1.1.1"
 
 import webapp2
@@ -225,7 +225,6 @@ class MainPage(Handler):
             'user': user,
             'loginURL':users.create_login_url("/"),
             'logoutURL':users.create_logout_url("/"),
-            
             } 
         if user:
             userManagement['nickname'] = user.nickname() 
@@ -262,16 +261,16 @@ class MainPage(Handler):
         pic = self.request.get("pic")
         user = users.get_current_user();
 
-        if not user:
-            self.redirect('/')
-            return
-
-        
-        artist = getOrCreateArtistKeyFromUser(user)
-        
-        if not artist:
-            logging.log('had some problem, could not ger artist')
-            self.redirect('/')
+        #if not user:
+        #    self.redirect('/')
+        #    return
+        artistKey = None
+        if user:
+            artistKey = getOrCreateArtistKeyFromUser(user)
+            artistKey = str(artistKey)
+        #if not artist: letting anyone submit
+        #   logging.log('had some problem, could not ger artist')
+        #  self.redirect('/')
         
         keys = memcache.get(MEMCACHE_TOP_ART_KEY)
         if keys and len(keys) >= MAX_POSTS:
@@ -280,7 +279,7 @@ class MainPage(Handler):
         
 
         #canVote = not check_secure_val(self.request.cookies.get('voted%s' % VOTING_EVENT))
-        artistKey = str(artist)
+        
         error =""
         if len(title) > 500:
             error = "title should be less than 500 characters"
@@ -291,7 +290,10 @@ class MainPage(Handler):
             try:
                 resizedPic = images.resize(pic, 500, 300)
                 picBlob = db.Blob(resizedPic)
-                a = Art(title = title, pic=picBlob, artist=artistKey)
+                if artistKey:
+                    a = Art(title = title, pic=picBlob, artist=artistKey)
+                else: 
+                    a= Art(title = title, pic=picBlob) 
                 a.put()
                 topArts(True)
                 title= "";#clear title for redirect

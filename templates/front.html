@@ -1,78 +1,85 @@
 <html>
 	<head>
 		<link rel="shortcut icon" href="/favicon.ico?v=2" />
+		
 	    <LINK href="/static/css/votingPage.css" rel="stylesheet" type="text/css">
+	    <!--
+	    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	    <script src="/static/js/page.js"></script>
+	    -->
 	</head>
 	<body>
-		<h1 class="heading">{{pageHeading}}</h1>
 		
-		<section class="picture-submission">
-			{% if userManagement.user %}
-			<a href="{{userManagement.logoutURL}}">logout {{userManagement.nickname}}</a>
-			<form class="submit-art-form"  enctype="multipart/form-data" method="post">
-				<div >
-					<label for="title"> Title </label>
-					<div>
-						<input type="text" name="title" value="{{title}}"> 
-					</div>
-					
+		<section class="main-body">
+			<h1 class="heading">{{pageHeading}}</h1>
+			<section class="picture-submission">
+				<div class="user-login-container">
+					{% if userManagement.user %}
+					<a href="{{userManagement.logoutURL}}">logout {{userManagement.nickname}}</a>
+					{% else %}
+					<a href="{{userManagement.loginURL}}">login</a>
+					<span>Pictures added while l<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>ogged in can be permanently removed by you</span>
+					{% endif %}
+					<!--  
+					<button id="pic-submission-toggle-btn">&#9650</button>
+					-->
 				</div>
-				<div>
-					<label for="pic"> Picture </label> 
-					<div class="file-upload-container">
-						<input class="file-upload" type="file" name="pic">
-					</div>
-					
+				<div class="picture-submission-container">
+					<form class="submit-art-form"  enctype="multipart/form-data" method="post">
+						<div >
+							<label for="title"> Title </label>
+							<div>
+								<input type="text" name="title" value="{{title}}"> 
+							</div>
+						</div>
+						<div>
+							<label for="pic"> Picture </label> 
+							<div class="file-upload-container">
+								<input class="file-upload" type="file" name="pic">
+							</div>
+						</div>
+						<div class="submit-art-container">
+							<input class="submit-art" type="submit" value="submit">
+						</div>
+						<div class="error">{{error}}</div>
+					</form>
 				</div>
-				
-				
-				<div class="submit-art-container">
-					<input class="submit-art" type="submit">
+			</section>
+			<hr>
+			<section class="art-showcase">
+				{% for art in arts %}
+				<div class="art">
+					<div class="art-inner">
+						{% if art.pic %} 
+						<div class="art-title">{{art.title}}</div>
+						<div class="votes">
+							<span>Votes: </span><span>{{art.votes}}</span>
+						</div>
+						<div class="art-image">
+							<img src="/getImg?img_id={{art.key()}}"> 		
+						</div>
+						<div class="action-buttons-container">
+							{% if canVote %}
+							<form class="vote-form" method="post" action="vote">
+								<input type="hidden" name="vote" value="{{art.key()}}"> 
+								<input class="voting-button" type="submit" value="vote">
+							</form>
+							
+							{% endif %}
+							{% if userManagement['isAdmin'] or art.artist == userManagement['userKey']%}
+							<form class="remove-form" method="post" action="remove">
+								<input type="hidden" name="remove" value="{{art.key()}}">
+								<input class="remove-button button" type="submit" value="remove">
+							</form>
+							{% endif %}
+						</div>
+						{% endif %} 
+					</div>
 				</div>
-				<div class="error">{{error}}</div>
-			</form>
-			{% else %}
-			<a href="{{userManagement.loginURL}}">login</a>
-			{% endif %}
-		</section>
-
-		<hr>
-		<section class="art-showcase">
-			{% for art in arts %}
-			<div class="art">
-				<div class="art-inner">
-					{% if art.pic %} 
-					<div class="art-title">{{art.title}}</div>
-					<div class="votes">
-						<span>Votes: </span><span>{{art.votes}}</span>
-					</div>
-					
-					<div class="art-image">
-						<img src="/getImg?img_id={{art.key()}}"> 		
-					</div>
-		
-					<div class="action-buttons-container">
-						{% if canVote %}
-						<form class="vote-form" method="post" action="vote">
-							<input type="hidden" name="vote" value="{{art.key()}}"> 
-							<input class="voting-button" type="submit" value="vote">
-						</form>
-						
-						{% endif %}
-						{% if userManagement['isAdmin'] or art.artist == userManagement['userKey']%}
-						<form class="remove-form" method="post" action="remove">
-							<input type="hidden" name="remove" value="{{art.key()}}">
-							<input class="remove-button button" type="submit" value="remove">
-						</form>
-						{% endif %}
-					</div>
-					
-					{% endif %} 
-				</div>
-			</div>
-			{% endfor %}
-		</section>
-		<footer class="footer">
-		</footer>
+				{% endfor %}
+			</section>
+			<footer class="footer">
+			</footer>
+			</section>
 	</body>
 </html>
