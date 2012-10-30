@@ -34,6 +34,10 @@
 							</div>
 						</div>
 						<div>
+							<label for="team">Team</label>
+							<input class="team-name-input" type="text" name="team">
+						</div>
+						<div>
 							<label for="pic"> Picture </label> 
 							<div class="file-upload-container">
 								<input class="file-upload" type="file" name="pic">
@@ -47,29 +51,63 @@
 				</div>
 			</section>
 			<hr>
-			<section class="art-showcase">
-				{% for art in arts %}
-				<div class="art">
-					<div class="art-inner">
-						{% if art.pic %} 
-						<div class="art-title">{{art.title}}</div>
+			<section class="team-showcase">
+				{% for team in teams %}
+					<div>{{team.name}}</div>
+					{% for artKey in team.arts %}
+						<!--  -->
+						{% if arts[artKey].pic %} 
+						<div class="art-title">{{arts[artKey].title}}</div>
 						<div class="votes">
-							<span>Votes: </span><span>{{art.votes}}</span>
+							<span>Votes: </span><span>{{arts[artKey].votes}}</span>
 						</div>
 						<div class="art-image">
-							<img src="/getImg?img_id={{art.key()}}"> 		
+							<img src="/getImg?img_id={{arts[artKey].key()}}"> 		
 						</div>
 						<div class="action-buttons-container">
 							{% if canVote %}
 							<form class="vote-form" method="post" action="vote">
-								<input type="hidden" name="vote" value="{{art.key()}}"> 
+								<input type="hidden" name="vote" value="{{artKey}}"> 
 								<input class="voting-button" type="submit" value="vote">
 							</form>
 							
 							{% endif %}
 							{% if userManagement['isAdmin'] or art.artist == userManagement['userKey']%}
 							<form class="remove-form" method="post" action="remove">
-								<input type="hidden" name="remove" value="{{art.key()}}">
+								<input type="hidden" name="remove" value="{{artKey}}">
+								<input class="remove-button button" type="submit" value="remove">
+							</form>
+							{% endif %}
+						{% endif %}
+						<!--  -->
+					{% endfor %}
+					<hr>
+				{% endfor %}
+			</section>
+			<hr>
+			<section class="art-showcase">
+				{% for art in arts %}
+				<div class="art">
+					<div class="art-inner">
+						{% if arts[art].pic %} 
+						<div class="art-title">{{arts[art].title}}</div>
+						<div class="votes">
+							<span>Votes: </span><span>{{arts[art].votes}}</span>
+						</div>
+						<div class="art-image">
+							<img src="/getImg?img_id={{art}}"> 		
+						</div>
+						<div class="action-buttons-container">
+							{% if canVote %}
+							<form class="vote-form" method="post" action="vote">
+								<input type="hidden" name="vote" value="{{art}}"> 
+								<input class="voting-button" type="submit" value="vote">
+							</form>
+							
+							{% endif %}
+							{% if userManagement['isAdmin'] or art.artist == userManagement['userKey']%}
+							<form class="remove-form" method="post" action="remove">
+								<input type="hidden" name="remove" value="{{art}}">
 								<input class="remove-button button" type="submit" value="remove">
 							</form>
 							{% endif %}
